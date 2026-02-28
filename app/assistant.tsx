@@ -80,6 +80,11 @@ export const Assistant = () => {
           body: {
             ...request.body,
             model: activeModel,
+            id: request.id,
+            messages: request.messages,
+            trigger: request.trigger,
+            messageId: request.messageId,
+            metadata: request.requestMetadata,
           },
         }),
       }),
