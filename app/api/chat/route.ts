@@ -15,16 +15,18 @@ export async function POST(req: Request) {
   const {
     messages,
     system,
+    model,
     config,
   }: {
     messages: UIMessage[];
     system?: string;
+    model?: string;
     config?: {
       modelName?: string;
     };
   } = await req.json();
-  const model = config?.modelName;
-  if (!model) {
+  const selectedModel = model ?? config?.modelName;
+  if (!selectedModel) {
     throw new Error("model is required");
   }
 
@@ -38,7 +40,7 @@ export async function POST(req: Request) {
 
   try {
     const tools = await mcpClient.getTools();
-    const llm = createLangchainModel(model);
+    const llm = createLangchainModel(selectedModel);
     const agent = createAgent({
       model: llm,
       tools,

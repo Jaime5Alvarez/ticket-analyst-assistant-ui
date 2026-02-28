@@ -70,7 +70,7 @@ function ThreadWelcome() {
     <div className="mx-auto my-auto flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
       <div className="flex w-full flex-grow flex-col items-center justify-center">
         <div className="flex size-full flex-col justify-center px-8">
-          <div className="text-2xl font-semibold">Hello there!</div>
+          <div className="font-semibold text-2xl">Hello there!</div>
           <div className="text-2xl text-muted-foreground/65">
             How can I help you today?
           </div>
@@ -81,18 +81,28 @@ function ThreadWelcome() {
           prompt="Tell me the ticket price for the next Real Madrid match at the Santiago Bernabeu."
           asChild
         >
-          <Button variant="ghost" className="h-auto w-full flex-col items-start justify-start gap-1 border rounded-2xl px-5 py-4 text-left text-sm">
+          <Button
+            variant="ghost"
+            className="h-auto w-full flex-col items-start justify-start gap-1 rounded-2xl border px-5 py-4 text-left text-sm"
+          >
             <span className="font-medium">Real Madrid ticket prices</span>
-            <span className="text-muted-foreground">Next match at the Bernabeu</span>
+            <span className="text-muted-foreground">
+              Next match at the Bernabeu
+            </span>
           </Button>
         </ThreadPrimitive.Suggestion>
         <ThreadPrimitive.Suggestion
           prompt="Find the date and ticket price range for the next Hans Zimmer concert in Madrid."
           asChild
         >
-          <Button variant="ghost" className="h-auto w-full flex-col items-start justify-start gap-1 border rounded-2xl px-5 py-4 text-left text-sm">
+          <Button
+            variant="ghost"
+            className="h-auto w-full flex-col items-start justify-start gap-1 rounded-2xl border px-5 py-4 text-left text-sm"
+          >
             <span className="font-medium">Hans Zimmer in Madrid</span>
-            <span className="text-muted-foreground">Next concert date and prices</span>
+            <span className="text-muted-foreground">
+              Next concert date and prices
+            </span>
           </Button>
         </ThreadPrimitive.Suggestion>
       </div>
@@ -104,7 +114,6 @@ function Composer() {
   return (
     <ComposerPrimitive.Root className="relative flex w-full flex-col">
       <ComposerPrimitive.AttachmentDropzone className="flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
-
         <ComposerPrimitive.Input
           placeholder="Send a message..."
           className="mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
@@ -181,13 +190,11 @@ function ThreadScrollToBottom() {
 function UserMessage() {
   return (
     <MessagePrimitive.Root
-      className="mx-auto grid w-full max-w-[var(--thread-max-width)] auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 fade-in slide-in-from-bottom-1 animate-in duration-150"
+      className="fade-in slide-in-from-bottom-1 mx-auto grid w-full max-w-[var(--thread-max-width)] animate-in auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 duration-150"
       data-role="user"
     >
-
-
       <div className="relative col-start-2 min-w-0">
-        <div className="rounded-2xl bg-muted px-4 py-2.5 break-words text-foreground">
+        <div className="break-words rounded-2xl bg-muted px-4 py-2.5 text-foreground">
           <MessagePrimitive.Parts />
         </div>
         <div className="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2">
@@ -226,7 +233,9 @@ function EditComposer() {
         />
         <div className="mx-3 mb-3 flex items-center gap-2 self-end">
           <ComposerPrimitive.Cancel asChild>
-            <Button variant="ghost" size="sm">Cancel</Button>
+            <Button variant="ghost" size="sm">
+              Cancel
+            </Button>
           </ComposerPrimitive.Cancel>
           <ComposerPrimitive.Send asChild>
             <Button size="sm">Update</Button>
@@ -240,18 +249,22 @@ function EditComposer() {
 function AssistantMessage() {
   return (
     <MessagePrimitive.Root
-      className="relative mx-auto w-full max-w-[var(--thread-max-width)] py-3 fade-in slide-in-from-bottom-1 animate-in duration-150"
+      className="fade-in slide-in-from-bottom-1 relative mx-auto w-full max-w-[var(--thread-max-width)] animate-in py-3 duration-150"
       data-role="assistant"
     >
-
-      <div className="break-words px-2 leading-relaxed text-foreground">
+      <div className="break-words px-2 text-foreground leading-relaxed">
         <MessagePrimitive.Parts
           components={{
             Text: MarkdownText,
             tools: { Fallback: ToolFallback },
-          }} />
+          }}
+        />
         <MessageError />
-        <AuiIf condition={(s) => s.thread.isRunning && s.message.content.length === 0}>
+        <AuiIf
+          condition={(s) =>
+            s.thread.isRunning && s.message.content.length === 0
+          }
+        >
           <div className="flex items-center gap-2 text-muted-foreground">
             <LoaderIcon className="size-4 animate-spin" />
             <span className="text-sm">Thinking...</span>
@@ -263,7 +276,6 @@ function AssistantMessage() {
         <BranchPicker />
         <AssistantActionBar />
       </div>
-
     </MessagePrimitive.Root>
   );
 }
@@ -305,7 +317,6 @@ function AssistantActionBar() {
           <RefreshCwIcon />
         </TooltipIconButton>
       </ActionBarPrimitive.Reload>
-
     </ActionBarPrimitive.Root>
   );
 }
@@ -314,7 +325,10 @@ function BranchPicker({ className, ...rest }: { className?: string }) {
   return (
     <BranchPickerPrimitive.Root
       hideWhenSingleBranch
-      className={cn("mr-2 -ml-2 inline-flex items-center text-xs text-muted-foreground", className)}
+      className={cn(
+        "mr-2 -ml-2 inline-flex items-center text-muted-foreground text-xs",
+        className,
+      )}
       {...rest}
     >
       <BranchPickerPrimitive.Previous asChild>

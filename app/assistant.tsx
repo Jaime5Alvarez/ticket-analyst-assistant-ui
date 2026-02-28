@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { AssistantRuntimeProvider, useAssistantApi } from "@assistant-ui/react";
+import { useMemo } from "react";
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import {
   useChatRuntime,
   AssistantChatTransport,
@@ -11,6 +11,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Thread } from "@/components/assistant-ui/thread";
 import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
+import { DEFAULT_MODEL, useModelStore } from "@/lib/stores/model-store";
 import {
   ModelSelector,
   ModelSelectorContent,
@@ -34,13 +35,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-const DEFAULT_MODEL = "anthropic/claude-sonnet-4.6";
 
 const MODELS = [
   { id: "alibaba/qwen3.5-flash", name: "Qwen 3.5 Flash", provider: "alibaba" },
@@ -63,13 +63,27 @@ const MODELS = [
 ] as const;
 
 export const Assistant = () => {
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL);
+  const selectedModel = useModelStore((s) => s.selectedModel);
+  const setSelectedModel = useModelStore((s) => s.setSelectedModel);
+  const hasHydrated = useModelStore((s) => s.hasHydrated);
+  const modelIds = useMemo<string[]>(() => MODELS.map((item) => item.id), []);
+  const activeModel =
+    hasHydrated && modelIds.includes(selectedModel)
+      ? selectedModel
+      : DEFAULT_MODEL;
   const transport = useMemo(
     () =>
       new AssistantChatTransport({
         api: "/api/chat",
+        prepareSendMessagesRequest: async (request) => ({
+          ...request,
+          body: {
+            ...request.body,
+            model: activeModel,
+          },
+        }),
       }),
-    [],
+    [activeModel],
   );
 
   const runtime = useChatRuntime({
@@ -105,8 +119,10 @@ export const Assistant = () => {
               </Breadcrumb>
               <HeaderModelSelector
                 className="ml-auto"
-                model={selectedModel}
+                model={activeModel}
                 onModelChange={setSelectedModel}
+                disabled={!hasHydrated}
+                showSkeleton={!hasHydrated}
               />
               <ModeToggle />
             </header>
@@ -124,35 +140,28 @@ type HeaderModelSelectorProps = {
   model: string;
   onModelChange: (model: string) => void;
   className?: string;
+  disabled?: boolean;
+  showSkeleton?: boolean;
 };
 
 const HeaderModelSelector = ({
   model,
   onModelChange,
   className,
+  disabled = false,
+  showSkeleton = false,
 }: HeaderModelSelectorProps) => {
-  const api = useAssistantApi();
-  const selectedModel = MODELS.find((item) => item.id === model);
+  const selectedModelConfig = MODELS.find((item) => item.id === model);
 
-  useEffect(() => {
-    const unregister = api.modelContext().register({
-      getModelContext: () => ({
-        config: {
-          modelName: model,
-        },
-      }),
-    });
-
-    return () => {
-      unregister();
-    };
-  }, [api, model]);
+  if (showSkeleton) {
+    return <Skeleton className={`${className ?? ""} h-9 w-52`} />;
+  }
 
   return (
     <ModelSelector>
       <ModelSelectorTrigger asChild>
-        <Button className={className} variant="outline">
-          {selectedModel?.name ?? model}
+        <Button className={className} variant="outline" disabled={disabled}>
+          {selectedModelConfig?.name ?? model}
           <ChevronsUpDown className="size-4 opacity-60" />
         </Button>
       </ModelSelectorTrigger>
