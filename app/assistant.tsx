@@ -10,6 +10,7 @@ import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Thread } from "@/components/assistant-ui/thread";
 import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
+import { ModeToggle } from "@/components/mode-toggle";
 import {
   ModelSelector,
   ModelSelectorContent,
@@ -106,6 +107,7 @@ export const Assistant = () => {
                 model={selectedModel}
                 onModelChange={setSelectedModel}
               />
+              <ModeToggle />
             </header>
             <div className="flex-1 overflow-hidden">
               <Thread />
