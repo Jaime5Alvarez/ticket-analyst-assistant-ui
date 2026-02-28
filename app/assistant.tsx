@@ -44,16 +44,16 @@ export const Assistant = () => {
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink
-                      href="https://www.assistant-ui.com/docs/getting-started"
+                      href="https://www.viagogo.com"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Build Your Own ChatGPT UX
+                      viagogo.com
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Starter Template</BreadcrumbPage>
+                    <BreadcrumbPage>Ticket Analyst Assistant</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
