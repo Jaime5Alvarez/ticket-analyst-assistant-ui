@@ -15,10 +15,18 @@ export async function POST(req: Request) {
   const {
     messages,
     system,
+    config,
   }: {
     messages: UIMessage[];
     system?: string;
+    config?: {
+      modelName?: string;
+    };
   } = await req.json();
+  const model = config?.modelName;
+  if (!model) {
+    throw new Error("model is required");
+  }
 
   const mcpClient = new MultiServerMCPClient({
     mcpServers: {
@@ -30,9 +38,9 @@ export async function POST(req: Request) {
 
   try {
     const tools = await mcpClient.getTools();
-    const model = createLangchainModel();
+    const llm = createLangchainModel(model);
     const agent = createAgent({
-      model,
+      model: llm,
       tools,
     });
     const modelMessages = await convertToModelMessages(messages);
