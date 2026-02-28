@@ -44,6 +44,7 @@ const DEFAULT_MODEL = "anthropic/claude-sonnet-4.6";
 
 const MODELS = [
   { id: "alibaba/qwen3.5-flash", name: "Qwen 3.5 Flash", provider: "alibaba" },
+  { id: "alibaba/qwen3.5-plus", name: "Qwen 3.5 Plus", provider: "alibaba" },
   { id: "openai/gpt-5.3-codex", name: "GPT-5.3 Codex", provider: "openai" },
   {
     id: "google/gemini-3.1-pro-preview",
