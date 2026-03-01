@@ -15,7 +15,7 @@ PLAYWRIGHT_MCP_SERVER=http://localhost:8931/mcp
 2. Start the Playwright MCP server (in another terminal):
 
 ```bash
-bunx @playwright/mcp@latest --port 8931 --device "iPhone 15"
+bunx @playwright/mcp@latest --port 8931 --headless --device "iPhone 15"
 ```
 
 3. Run the development server:
