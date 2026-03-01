@@ -1,0 +1,22 @@
+import type { UIMessage } from "ai";
+import { Assistant } from "@/app/assistant";
+import { requireServerSession } from "@/lib/auth-session";
+import { getUserConversation } from "@/lib/conversations";
+
+export default async function ThreadPage({
+  params,
+}: {
+  params: Promise<{ threadId: string }>;
+}) {
+  const session = await requireServerSession();
+  const { threadId } = await params;
+  const conversation = await getUserConversation({
+    userId: session.user.id,
+    threadId,
+  });
+  const initialMessages = (conversation?.messages ?? []) as UIMessage[];
+
+  return (
+    <Assistant initialThreadId={threadId} initialMessages={initialMessages} />
+  );
+}

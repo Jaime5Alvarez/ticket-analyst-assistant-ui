@@ -16,11 +16,11 @@ NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET=replace-with-a-random-secret-min-32-chars
 ```
 
-2. Install dependencies and create Better Auth tables:
+2. Install dependencies and create DB schema with Drizzle:
 
 ```bash
 bun install
-bunx @better-auth/cli migrate
+bun run db:push
 ```
 
 3. Start the Playwright MCP server (in another terminal):
@@ -40,5 +40,12 @@ bun dev
 ```bash
 bun run create:user
 ```
+
+## Conversation Persistence
+
+Conversations are persisted in PostgreSQL with Drizzle in the `conversation_threads` table.
+
+- `GET /api/conversations`: list current user's persisted threads
+- `GET /api/conversations/:threadId`: fetch one persisted thread
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

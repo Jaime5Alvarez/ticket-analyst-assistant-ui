@@ -1,12 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import { useRouter } from "next/navigation";
 import {
   useChatRuntime,
   AssistantChatTransport,
 } from "@assistant-ui/react-ai-sdk";
-import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import {
+  lastAssistantMessageIsCompleteWithToolCalls,
+  type UIMessage,
+} from "ai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Thread } from "@/components/assistant-ui/thread";
 import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
@@ -63,7 +67,16 @@ const MODELS = [
   },
 ] as const;
 
-export const Assistant = () => {
+type AssistantProps = {
+  initialThreadId: string;
+  initialMessages: UIMessage[];
+};
+
+export const Assistant = ({
+  initialThreadId,
+  initialMessages,
+}: AssistantProps) => {
+  const router = useRouter();
   const selectedModel = useModelStore((s) => s.selectedModel);
   const setSelectedModel = useModelStore((s) => s.setSelectedModel);
   const hasHydrated = useModelStore((s) => s.hasHydrated);
@@ -81,7 +94,7 @@ export const Assistant = () => {
           body: {
             ...request.body,
             model: activeModel,
-            id: request.id,
+            id: initialThreadId,
             messages: request.messages,
             trigger: request.trigger,
             messageId: request.messageId,
@@ -89,19 +102,39 @@ export const Assistant = () => {
           },
         }),
       }),
-    [activeModel],
+    [activeModel, initialThreadId],
   );
 
   const runtime = useChatRuntime({
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     transport,
+    id: initialThreadId,
+    messages: initialMessages,
   });
 
+  const onCreateThread = useCallback(() => {
+    router.push(`/thread/${crypto.randomUUID()}`);
+  }, [router]);
+
+  const onSelectThread = useCallback(
+    (threadId: string) => {
+      if (threadId === initialThreadId) {
+        return;
+      }
+      router.push(`/thread/${threadId}`);
+    },
+    [initialThreadId, router],
+  );
+
   return (
-    <AssistantRuntimeProvider runtime={runtime}>
+    <AssistantRuntimeProvider runtime={runtime} key={initialThreadId}>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
-          <ThreadListSidebar />
+          <ThreadListSidebar
+            activeThreadId={initialThreadId}
+            onSelectThread={onSelectThread}
+            onCreateThread={onCreateThread}
+          />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger />

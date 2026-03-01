@@ -1,24 +1,13 @@
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
-import { Pool } from "pg";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/lib/db";
+import { authSchema } from "@/lib/db/schema";
 import { getServerConstant } from "@/lib/server-constants";
 
-const globalForPg = globalThis as unknown as { pgPool?: Pool };
-
-const database =
-  globalForPg.pgPool ??
-  new Pool({
-    connectionString: getServerConstant("DATABASE_URL"),
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPg.pgPool = database;
-}
-
-const provisioningMode = process.env.AUTH_PROVISIONING_MODE === "true";
-
 export const auth = betterAuth({
-  database,
+  database: drizzleAdapter(db, { provider: "pg", schema: authSchema }),
+  baseURL: getServerConstant("BETTER_AUTH_URL"),
   emailAndPassword: {
     enabled: true,
   },
@@ -26,6 +15,8 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async () => {
+          const provisioningMode =
+            process.env.AUTH_PROVISIONING_MODE === "true";
           if (!provisioningMode) {
             throw new APIError("FORBIDDEN", {
               message: "Public signup is disabled",

@@ -11,11 +11,18 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { ThreadList } from "@/components/assistant-ui/thread-list";
+import { PersistedThreadList } from "@/components/assistant-ui/persisted-thread-list";
 
 export function ThreadListSidebar({
+  activeThreadId,
+  onSelectThread,
+  onCreateThread,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: React.ComponentProps<typeof Sidebar> & {
+  activeThreadId: string;
+  onSelectThread: (threadId: string) => void;
+  onCreateThread: () => void;
+}) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="aui-sidebar-header mb-2 border-b">
@@ -43,7 +50,11 @@ export function ThreadListSidebar({
         </div>
       </SidebarHeader>
       <SidebarContent className="aui-sidebar-content px-2">
-        <ThreadList />
+        <PersistedThreadList
+          activeThreadId={activeThreadId}
+          onSelectThread={onSelectThread}
+          onCreateThread={onCreateThread}
+        />
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter className="aui-sidebar-footer border-t">
