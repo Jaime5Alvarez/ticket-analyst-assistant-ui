@@ -22,7 +22,6 @@ const chatRequestSchema = z.object({
     (value) => Array.isArray(value),
     "messages must be an array",
   ),
-  system: z.string().optional(),
   model: z.string().min(1),
 });
 
@@ -47,7 +46,7 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const { id, messages, system, model }: ChatRequestBody = parsedBody.data;
+  const { id, messages, model }: ChatRequestBody = parsedBody.data;
   const selectedModel = model;
 
   const mcpClient = new MultiServerMCPClient({
@@ -64,15 +63,10 @@ export async function POST(req: Request) {
     const agent = createAgent({
       model: llm,
       tools,
+      systemPrompt: getTicketAnalystSystemPrompt(),
     });
     const modelMessages = await convertToModelMessages(messages);
-    const langchainMessages = convertModelMessages([
-      {
-        role: "system",
-        content: system ?? getTicketAnalystSystemPrompt(),
-      },
-      ...modelMessages,
-    ]);
+    const langchainMessages = convertModelMessages(modelMessages);
 
     const langchainStream = await agent.stream(
       { messages: langchainMessages },
