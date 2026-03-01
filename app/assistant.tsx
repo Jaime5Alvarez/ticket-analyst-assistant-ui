@@ -119,7 +119,7 @@ export const Assistant = ({
   );
 
   return (
-    <AssistantRuntimeProvider runtime={runtime} key={initialThreadId}>
+    <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
           <ThreadListSidebar

@@ -23,6 +23,7 @@ export default async function ThreadPage({
 
   return (
     <Assistant
+      key={threadId}
       initialThreadId={threadId}
       initialMessages={initialMessages}
       currentUser={currentUser}
