@@ -1,7 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
-import { LogOut, Monitor, Moon, Sun, ChevronsUpDown } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Download,
+  LogOut,
+  Monitor,
+  Moon,
+  Sun,
+  ChevronsUpDown,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +25,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
+
+declare global {
+  interface Window {
+    __deferredInstallPrompt?: BeforeInstallPromptEvent;
+  }
+}
 
 type UserAccountDropdownProps = {
   user: {
@@ -39,6 +57,7 @@ export function UserAccountDropdown({ user }: UserAccountDropdownProps) {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
+  const [canInstall, setCanInstall] = useState(false);
 
   const displayName = user.name?.trim() || "User";
   const displayEmail = user.email?.trim() || "No email";
@@ -51,6 +70,44 @@ export function UserAccountDropdown({ user }: UserAccountDropdownProps) {
     await authClient.signOut();
     router.replace("/login");
     router.refresh();
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone ===
+        true;
+
+    const syncInstallAvailability = () => {
+      setCanInstall(!isStandalone && !!window.__deferredInstallPrompt);
+    };
+
+    syncInstallAvailability();
+    window.addEventListener("pwa-install-available", syncInstallAvailability);
+    window.addEventListener("pwa-install-unavailable", syncInstallAvailability);
+
+    return () => {
+      window.removeEventListener(
+        "pwa-install-available",
+        syncInstallAvailability,
+      );
+      window.removeEventListener(
+        "pwa-install-unavailable",
+        syncInstallAvailability,
+      );
+    };
+  }, []);
+
+  const onInstallApp = async () => {
+    const promptEvent = window.__deferredInstallPrompt;
+    if (!promptEvent) return;
+
+    await promptEvent.prompt();
+    await promptEvent.userChoice;
+    window.__deferredInstallPrompt = undefined;
+    setCanInstall(false);
   };
 
   const currentTheme = theme ?? "system";
@@ -68,7 +125,7 @@ export function UserAccountDropdown({ user }: UserAccountDropdownProps) {
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{displayName}</span>
-            <span className="truncate text-xs text-muted-foreground">
+            <span className="truncate text-muted-foreground text-xs">
               {displayEmail}
             </span>
           </div>
@@ -89,7 +146,7 @@ export function UserAccountDropdown({ user }: UserAccountDropdownProps) {
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{displayName}</span>
-              <span className="truncate text-xs text-muted-foreground">
+              <span className="truncate text-muted-foreground text-xs">
                 {displayEmail}
               </span>
             </div>
@@ -116,6 +173,15 @@ export function UserAccountDropdown({ user }: UserAccountDropdownProps) {
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        {canInstall ? (
+          <>
+            <DropdownMenuItem onClick={onInstallApp}>
+              <Download className="size-4" />
+              Install app
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         <DropdownMenuItem variant="destructive" onClick={onSignOut}>
           <LogOut className="size-4" />
           Sign out
