@@ -78,16 +78,36 @@ function ThreadWelcome() {
       </div>
       <div className="grid w-full gap-2 pb-4 md:grid-cols-2">
         {/* Add your suggestions here */}
-        <ThreadPrimitive.Suggestion prompt="What's the weather in San Francisco?" asChild>
-          <Button variant="ghost" className="h-auto w-full flex-col items-start justify-start gap-1 border rounded-2xl px-5 py-4 text-left text-sm">
-            <span className="font-medium">What's the weather</span>
-            <span className="text-muted-foreground">in San Francisco?</span>
+        <ThreadPrimitive.Suggestion
+          prompt="Find ticket prices for the next Real Madrid match."
+          asChild
+        >
+          <Button
+            variant="ghost"
+            className="group h-auto w-full flex-col items-start justify-start gap-1 rounded-2xl border px-5 py-4 text-left text-sm transition-colors hover:bg-accent/70 hover:text-foreground"
+          >
+            <span className="font-medium text-foreground transition-colors group-hover:text-foreground">
+              Next Real Madrid match
+            </span>
+            <span className="text-muted-foreground transition-colors group-hover:text-foreground/80">
+              Show ticket prices
+            </span>
           </Button>
         </ThreadPrimitive.Suggestion>
-        <ThreadPrimitive.Suggestion prompt="Explain React hooks like useState" asChild>
-          <Button variant="ghost" className="h-auto w-full flex-col items-start justify-start gap-1 border rounded-2xl px-5 py-4 text-left text-sm">
-            <span className="font-medium">Explain React hooks</span>
-            <span className="text-muted-foreground">like useState</span>
+        <ThreadPrimitive.Suggestion
+          prompt="Find ticket prices for the next Hans Zimmer concert in Madrid."
+          asChild
+        >
+          <Button
+            variant="ghost"
+            className="group h-auto w-full flex-col items-start justify-start gap-1 rounded-2xl border px-5 py-4 text-left text-sm transition-colors hover:bg-accent/70 hover:text-foreground"
+          >
+            <span className="font-medium text-foreground transition-colors group-hover:text-foreground">
+              Next Hans Zimmer in Madrid
+            </span>
+            <span className="text-muted-foreground transition-colors group-hover:text-foreground/80">
+              Show ticket prices
+            </span>
           </Button>
         </ThreadPrimitive.Suggestion>
       </div>
