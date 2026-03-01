@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: ai-ticket-analyst-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ticket_analyst
+      POSTGRES_PASSWORD: ticket_analyst_pass
+      POSTGRES_DB: ticket_analyst_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ticket_analyst -d ticket_analyst_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
