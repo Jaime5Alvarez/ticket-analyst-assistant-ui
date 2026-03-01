@@ -15,8 +15,17 @@ export default async function ThreadPage({
     threadId,
   });
   const initialMessages = (conversation?.messages ?? []) as UIMessage[];
+  const currentUser = {
+    name: session.user.name,
+    email: session.user.email,
+    image: session.user.image,
+  };
 
   return (
-    <Assistant initialThreadId={threadId} initialMessages={initialMessages} />
+    <Assistant
+      initialThreadId={threadId}
+      initialMessages={initialMessages}
+      currentUser={currentUser}
+    />
   );
 }

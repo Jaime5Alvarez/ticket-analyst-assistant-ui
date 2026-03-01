@@ -14,8 +14,6 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Thread } from "@/components/assistant-ui/thread";
 import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
-import { SignOutButton } from "@/components/auth/sign-out-button";
-import { ModeToggle } from "@/components/mode-toggle";
 import { DEFAULT_MODEL, useModelStore } from "@/lib/stores/model-store";
 import {
   ModelSelector,
@@ -70,11 +68,17 @@ const MODELS = [
 type AssistantProps = {
   initialThreadId: string;
   initialMessages: UIMessage[];
+  currentUser: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
 };
 
 export const Assistant = ({
   initialThreadId,
   initialMessages,
+  currentUser,
 }: AssistantProps) => {
   const router = useRouter();
   const selectedModel = useModelStore((s) => s.selectedModel);
@@ -134,6 +138,7 @@ export const Assistant = ({
             activeThreadId={initialThreadId}
             onSelectThread={onSelectThread}
             onCreateThread={onCreateThread}
+            currentUser={currentUser}
           />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -163,8 +168,6 @@ export const Assistant = ({
                 disabled={!hasHydrated}
                 showSkeleton={!hasHydrated}
               />
-              <SignOutButton />
-              <ModeToggle />
             </header>
             <div className="flex-1 overflow-hidden">
               <Thread />

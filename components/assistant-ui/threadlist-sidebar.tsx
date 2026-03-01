@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Github, MessagesSquare } from "lucide-react";
-import Link from "next/link";
+import { MessagesSquare } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,16 +11,25 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { PersistedThreadList } from "@/components/assistant-ui/persisted-thread-list";
+import { UserAccountDropdown } from "@/components/assistant-ui/user-account-dropdown";
+
+type SidebarUser = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};
 
 export function ThreadListSidebar({
   activeThreadId,
   onSelectThread,
   onCreateThread,
+  currentUser,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   activeThreadId: string;
   onSelectThread: (threadId: string) => void;
   onCreateThread: () => void;
+  currentUser: SidebarUser;
 }) {
   return (
     <Sidebar {...props}>
@@ -29,21 +37,16 @@ export function ThreadListSidebar({
         <div className="aui-sidebar-header-content flex items-center justify-between">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild>
-                <Link
-                  href="https://assistant-ui.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="aui-sidebar-header-icon-wrapper flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                    <MessagesSquare className="aui-sidebar-header-icon size-4" />
-                  </div>
-                  <div className="aui-sidebar-header-heading mr-6 flex flex-col gap-0.5 leading-none">
-                    <span className="aui-sidebar-header-title font-semibold">
-                      assistant-ui
-                    </span>
-                  </div>
-                </Link>
+              <SidebarMenuButton size="lg">
+                <div className="aui-sidebar-header-icon-wrapper flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <MessagesSquare className="aui-sidebar-header-icon size-4" />
+                </div>
+                <div className="aui-sidebar-header-heading mr-6 flex flex-col gap-0.5 leading-none">
+                  <span className="aui-sidebar-header-title font-semibold">
+                    Ticket Analyst
+                  </span>
+                  <span className="text-xs">Assistant</span>
+                </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -60,22 +63,7 @@ export function ThreadListSidebar({
       <SidebarFooter className="aui-sidebar-footer border-t">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link
-                href="https://github.com/assistant-ui/assistant-ui"
-                target="_blank"
-              >
-                <div className="aui-sidebar-footer-icon-wrapper flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Github className="aui-sidebar-footer-icon size-4" />
-                </div>
-                <div className="aui-sidebar-footer-heading flex flex-col gap-0.5 leading-none">
-                  <span className="aui-sidebar-footer-title font-semibold">
-                    GitHub
-                  </span>
-                  <span>View Source</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
+            <UserAccountDropdown user={currentUser} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
