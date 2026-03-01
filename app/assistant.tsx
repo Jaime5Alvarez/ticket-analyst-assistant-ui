@@ -46,13 +46,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const MODELS = [
-  { id: "alibaba/qwen3.5-flash", name: "Qwen 3.5 Flash", provider: "alibaba" },
   { id: "alibaba/qwen3.5-plus", name: "Qwen 3.5 Plus", provider: "alibaba" },
-  {
-    id: "google/gemini-3.1-pro-preview",
-    name: "Gemini 3.1 Pro Preview",
-    provider: "google",
-  },
   { id: DEFAULT_MODEL, name: "Claude Sonnet 4.6", provider: "anthropic" },
   { id: "minimax/minimax-m2.5", name: "MiniMax M2.5", provider: "minimax" },
   { id: "zai/glm-5", name: "GLM-5", provider: "zai" },
