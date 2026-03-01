@@ -26,7 +26,9 @@ bun run db:push
 3. Start the Playwright MCP server (in another terminal):
 
 ```bash
-bunx @playwright/mcp@latest --port 8931 --headless --device "iPhone 15"
+docker build -t playwright-mcp-server playwright-mcp-server/
+docker run -p 3050:3050 playwright-mcp-server
+
 ```
 
 4. Run the development server:
