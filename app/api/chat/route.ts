@@ -10,8 +10,18 @@ import {
 import { createLangchainModel } from "@/lib/langchain-model-factory";
 import { getTicketAnalystSystemPrompt } from "@/lib/ticket-analyst-system-prompt";
 import { getServerConstant } from "@/lib/server-constants";
+import { auth } from "@/lib/auth";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+  if (!session) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const {
     messages,
     system,
