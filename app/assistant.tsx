@@ -47,7 +47,8 @@ import {
 
 const MODELS = [
   { id: "alibaba/qwen3.5-plus", name: "Qwen 3.5 Plus", provider: "alibaba" },
-  { id: DEFAULT_MODEL, name: "Claude Sonnet 4.6", provider: "anthropic" },
+  { id: "anthropic/claude-sonnet-4.6", name: "Claude Sonnet 4.6", provider: "anthropic" },
+  { id: DEFAULT_MODEL, name: "GPT-5.4", provider: "openai" },
   { id: "minimax/minimax-m2.5", name: "MiniMax M2.5", provider: "minimax" },
   { id: "zai/glm-5", name: "GLM-5", provider: "zai" },
   { id: "moonshotai/kimi-k2.5", name: "Kimi K2.5", provider: "moonshotai" },

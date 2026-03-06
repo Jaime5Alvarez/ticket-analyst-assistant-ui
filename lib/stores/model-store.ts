@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export const DEFAULT_MODEL = "anthropic/claude-sonnet-4.6";
+export const DEFAULT_MODEL = "openai/gpt-5.4";
 const MODEL_STORAGE_KEY = "ticket-analyst:selected-model";
 
 type ModelStore = {
