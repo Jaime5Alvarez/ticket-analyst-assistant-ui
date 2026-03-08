@@ -1,5 +1,5 @@
-FROM node:20-slim
+FROM mcr.microsoft.com/playwright:latest
 WORKDIR /app
 RUN npm install -g @playwright/mcp@latest
 EXPOSE 3050
-ENTRYPOINT ["/bin/sh", "-c", "npx @playwright/mcp@latest --port 3050 --host 0.0.0.0 --allowed-hosts '*' --cdp-endpoint \"wss://chrome.browserless.io?token=${BROWSERLESS_TOKEN}\""]
+ENTRYPOINT ["npx", "@playwright/mcp@latest", "--headless", "--browser", "chromium", "--device", "iPhone 15", "--port", "3050", "--host", "0.0.0.0", "--allowed-hosts", "*"]
