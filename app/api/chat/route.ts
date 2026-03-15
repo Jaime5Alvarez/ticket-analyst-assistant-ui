@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   const mcpClient = new MultiServerMCPClient({
     mcpServers: {
       playwright: {
-        url: "https://mcp.browserbase.com/mcp?browserbaseApiKey= bb_live_JKkBztA0WJnYLQU9hbP-t6f4Ztw",
+        url: getServerConstant("PLAYWRIGHT_MCP_SERVER"),
       },
     },
   });
